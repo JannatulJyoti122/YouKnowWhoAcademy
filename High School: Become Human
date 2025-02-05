@@ -1,0 +1,17 @@
+#include <bits/stdc++.h>
+using namespace std;
+using ll=long long int;
+const ll MAX=2e14;
+int main(){
+    int a,b;
+    cin>>a>>b;
+    double x=b*1.0;
+    double y=a*1.0;
+    x*=log10(a);
+    y*=log10(b);
+    //cout<<x<<" "<<y<<" ";
+    if(x>y) cout<<">";
+    else if(x<y) cout<<"<";
+    else cout<<"=";
+    cout<<endl;
+}
