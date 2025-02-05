@@ -1,0 +1,16 @@
+#include <bits/stdc++.h>
+using namespace std;
+using ll=long long int;
+int main(){
+    ll n,a,b,p,q;
+    cin>>n>>a>>b>>p>>q;
+    ll lcm=(a/__gcd(a,b))*b;
+    ll tot_lcm=n/lcm;
+    ll tot_a=(n/a)-tot_lcm;
+    ll tot_b=(n/b)-tot_lcm;
+    ll ans=0;
+    ans+=(1LL*p*tot_a);
+    ans+=(1LL*q*tot_b);
+    ans+=(1LL*tot_lcm*(max(p,q)));
+    cout<<ans<<endl;
+}
