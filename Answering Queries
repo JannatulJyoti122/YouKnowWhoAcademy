@@ -1,0 +1,42 @@
+#include <bits/stdc++.h>
+using namespace std;
+using ll=long long int;
+int main(){
+    int tt;
+    cin>>tt;
+    int cs=0;
+    while(tt--){
+        int n,q;
+        cin>>n>>q;
+        long long int sum=0;
+        long long int prev=0;
+        int a[n];
+        for(int i=0;i<n;i++){
+            int x;
+            cin>>x;
+            a[i]=x;
+            sum+=(prev)-(1LL*i*x);
+            prev+=x;
+        }
+        cout<<"Case "<<++cs<<":"<<endl;
+        while(q--){
+            int x;
+            cin>>x;
+            if(x==1){
+                cout<<sum<<endl;
+                continue;
+            }
+            int y,z;
+            cin>>y>>z;
+            y++;
+            int left=y-1;
+            int right=n-y;
+            sum+=(1LL*left*a[y-1]);
+            sum-=(1LL*right*a[y-1]);
+            sum-=(1LL*left*z);
+            sum+=(1LL*right*z);
+            a[y-1]=z;
+
+        }
+    }
+}
