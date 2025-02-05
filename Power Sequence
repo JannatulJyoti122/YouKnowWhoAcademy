@@ -1,0 +1,33 @@
+#include <bits/stdc++.h>
+using namespace std;
+using ll=long long int;
+const ll MAX=2e14;
+int main(){
+    int n;
+    cin>>n;
+    int a[n];
+    for(int i=0;i<n;i++) cin>>a[i];
+    sort(a,a+n);
+    ll ans=MAX;
+    for(int c=1;;c++){
+        vector<ll>v(n);
+        v[0]=1;
+        int no=0;
+        for(int i=1;i<n;i++){
+            v[i]=v[i-1]*c;
+            if(v[i]>MAX) {
+                no++;break;
+            }
+        }
+        if(no==1) break;
+        if(v[n-1]>MAX) break;
+        ll ops=0;
+        for(int i=0;i<n;i++){
+            ops+=abs((ll)v[i]-a[i]);
+            if(ops>MAX) break;
+        }
+        if(ops>MAX) break;
+        ans=min(ans,ops);
+    }
+    cout<<ans<<endl;
+}
