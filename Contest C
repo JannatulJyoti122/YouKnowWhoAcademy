@@ -1,0 +1,18 @@
+#include <bits/stdc++.h>
+using namespace std;
+using ll=long long int;
+const int N=1e7;
+bool f[N+1];
+int main(){
+    ll n;
+    cin>>n;
+    vector<ll>v;
+    for(int i=2;i<=N;i++){
+        if(f[i]==1) continue;
+        v.push_back(i);
+        for(int j=i+i;j<=N;j+=i){
+            f[j]=1;
+        }
+    }
+    for(int i=0;i<n;i++) cout<<v[i]<<" "; cout<<endl;
+}
