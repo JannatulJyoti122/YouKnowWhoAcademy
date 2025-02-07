@@ -1,0 +1,23 @@
+#include <bits/stdc++.h>
+using namespace std;
+using ll=long long int;
+const int N=1e6;
+ll trailling_zero(ll n){
+    ll ans=0;
+    for(ll i=5;n/i>=1;i*=5){
+        ans+=n/i;
+    }
+    return ans;
+}
+int main(){
+    ll m;
+    cin>>m;
+    vector<ll>v;
+    for(ll i=5;i<=N;i++){
+        ll ans =trailling_zero(i);
+        if(ans==m) v.push_back(i);
+        if(ans>m) break;
+    }
+    cout<<v.size()<<endl;
+    for(ll i=0;i<v.size();i++) cout<<v[i]<<" "; cout<<endl;
+}
