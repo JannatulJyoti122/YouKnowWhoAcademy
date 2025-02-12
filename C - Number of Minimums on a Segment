@@ -1,0 +1,105 @@
+#include <bits/stdc++.h>
+using namespace std;
+using ll=long long int;
+const ll N=100001;
+ll a[N];
+const ll NN=4*N;
+vector<pair<ll,ll>>t(NN,{N,0});
+void build(ll node,ll l,ll r){
+    if(l==r){
+        t[node].first=a[l];
+        t[node].second=1;
+        return;
+    }
+    ll left=2*node;
+    ll right=left+1LL;
+    ll mid=(l+r)/2;
+    build(left,l,mid);
+    build(right,mid+1LL,r);
+    //cout<<t[left].first<<" build "<<t[right].first<<endl;
+    if(t[left].first<t[right].first){
+        t[node].first=t[left].first;
+        t[node].second=t[left].second;
+    }
+    else if(t[left].first>t[right].first){
+        t[node].first=t[right].first;
+        t[node].second=t[right].second;
+    }
+    else{
+        t[node].first=t[right].first;
+        t[node].second=t[right].second+t[left].second;
+    }
+
+}
+void update(ll node,ll l,ll r,ll ind,ll val){
+    if(r<ind||ind<l) return;
+    if(l==r&&l==ind){
+        t[node].first=val;
+        t[node].second=1;
+        return;
+    }
+    ll left=2*node;
+    ll right=left+1;
+    ll mid=(l+r)/2;
+    update(left,l,mid,ind,val);
+    update(right,mid+1,r,ind,val);
+    if(t[left].first<t[right].first){
+        t[node].first=t[left].first;
+        t[node].second=t[left].second;
+    }
+    else if(t[left].first>t[right].first){
+        t[node].first=t[right].first;
+        t[node].second=t[right].second;
+    }
+    else{
+        t[node].first=t[right].first;
+        t[node].second=t[right].second+t[left].second;
+    }
+}
+pair<ll,ll> query(ll node,ll l,ll r,ll i,ll j){
+    if(r<i||j<l) return {1e9+1,0};
+    if(i<=l&&r<=j) {//cout<<t[node].first<<" "<<t[node].second<<" query\n";
+        return t[node];}
+    ll left=2*node;
+    ll right=left+1;
+    ll mid=(l+r)/2;
+    pair<ll,ll>p1=query(left,l,mid,i,j);
+    pair<ll,ll>p2=query(right,mid+1LL,r,i,j);
+    //cout<<p1.first<<" "<<p1.second<<" qury "<<p2.first<<" "<<p2.second<<endl;
+    if(p1.first<p2.first){
+        return p1;
+    }
+    else if(p1.first>p2.first){
+        return p2;
+    }
+    else{
+        return {p1.first,p1.second+p2.second};
+    }
+
+}
+int main() {
+    ll n,m;
+    cin>>n>>m;
+    for(ll i=1;i<=n;i++) {
+        cin>>a[i];
+    }
+    build(1,1,n);
+    //for(int i=1;i<=4*n;i++) cout<<t[i].first<<" - > "<<t[i].second<<endl;
+    while(m--){
+        ll x;
+        cin>>x;
+        if(x==1){
+            ll ind,val;
+            cin>>ind>>val;
+            ind++;
+            update(1LL,1LL,n,ind,val);
+        }
+        else{
+            ll l,r;
+            cin>>l>>r;
+            l++,r++;
+            pair<ll,ll> mn=query(1LL,1LL,n,l,r-1);
+            cout<<mn.first<<" "<<mn.second<<endl;
+        }
+    }
+}
