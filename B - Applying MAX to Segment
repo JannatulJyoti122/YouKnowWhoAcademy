@@ -1,0 +1,84 @@
+#include<bits/stdc++.h>
+using namespace std;
+const int N=1e5+9;
+int a[N];
+long long t[4*N], lazy[4*N];
+/*void build(int n,int b,int e){
+    if(b==e){
+        t[n]=0;
+        return;
+    }
+    int mid=(b+e)/2;
+    int left=2*n;
+    int right=left+1;
+    build(left,b,mid);
+    build(right,mid+1,e);
+    t[n]=t[left]+t[right];
+}*/
+void push(int n,int b,int e){
+    if(lazy[n]==0) return ;
+    t[n]=max(t[n],lazy[n]);
+    if(b!=e){
+        int lc=2*n;
+        int rc=lc+1;
+        lazy[lc]=max(lazy[lc],lazy[n]);
+        lazy[rc]=max(lazy[rc],lazy[n]);
+    }
+    lazy[n]=0;
+}
+void update(int n,int b,int e,int ind1,int ind2,long long val){
+    push(n,b,e);
+    if(b>ind2||e<ind1) return;
+    if(b>=ind1&&e<=ind2){
+        lazy[n]=val;
+        push(n,b,e);
+        return;
+    }
+    int mid=(b+e)/2;
+    int left=2*n;
+    int right=left+1;
+    update(left,b,mid,ind1,ind2,val);
+    update(right,mid+1,e,ind1,ind2,val);
+    t[n]=max(t[left],t[right]);
+}
+long long query(int n,int b,int e,int ind){
+    push(n,b,e);
+    if(ind<b||e<ind) return 0;
+    if(b==e&&b==ind){
+        return t[n];
+    }
+    int mid=(b+e)/2;
+    int left=2*n;
+    int right=left+1;
+    return(max(query(left,b,mid,ind),query(right,mid+1,e,ind)));
+}
+int main(){
+    ios_base::sync_with_stdio(0);
+    cin.tie(0);
+    int tt;
+    //cin>>tt;
+    int cs=0;
+    tt=1;
+    while(tt--){
+        int n,m;
+        cin>>n>>m;
+        for(int i=0;i<m;i++){
+            int x;
+            cin>>x;
+            if(x==1){
+                int l,r; long long val;
+                cin>>l>>r>>val;
+                l++,r++;
+                update(1,1,n,l,r-1,val);
+                //for(int i=1;i<=4*n;i++) cout<<t[i]<<" "; cout<<endl;
+            }
+            else{
+                int ind;
+                cin>>ind;
+                ind++;
+                cout<<query(1,1,n,ind)<<endl;
+            }
+        }
+    }
+
+}
