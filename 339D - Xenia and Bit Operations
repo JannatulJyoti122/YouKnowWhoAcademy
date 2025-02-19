@@ -1,0 +1,55 @@
+#include <bits/stdc++.h>
+using namespace std;
+const int N = (1 << 17) + 10;
+int a[N];
+int t[4 * N];
+
+void build(int n, int b, int e, int level) {
+    if (b == e) {
+        t[n] = a[b];
+        return;
+    }
+    int mid = (b + e) / 2;
+    int left = 2 * n;
+    int right = left + 1;
+    build(left, b, mid, level - 1);
+    build(right, mid + 1, e, level - 1);
+
+    if (level % 2 == 1) t[n] = t[left] | t[right];
+    else t[n] = t[left] ^ t[right];
+}
+
+void update(int n, int b, int e, int ind, int val, int level) {
+    if (b > ind || e < ind) return;
+    if (b == e && b == ind) {
+        t[n] = val;
+        return;
+    }
+    int mid = (b + e) / 2;
+    int left = 2 * n;
+    int right = left + 1;
+    update(left, b, mid, ind, val, level - 1);
+    update(right, mid + 1, e, ind, val, level - 1);
+
+    if (level % 2 == 1) t[n] = t[left] | t[right];
+    else t[n] = t[left] ^ t[right];
+}
+
+int main() {
+    ios_base::sync_with_stdio(false);
+    cin.tie(0);
+
+    int nn, m;
+    cin >> nn >> m;
+    int n = 1 << nn;
+    for (int i = 1; i <= n; i++) cin >> a[i];
+
+    build(1, 1, n, nn);
+
+    for (int i = 0; i < m; i++) {
+        int x, y;
+        cin >> x >> y;
+        update(1, 1, n, x, y, nn);
+        cout << t[1] << '\n';
+    }
+}
