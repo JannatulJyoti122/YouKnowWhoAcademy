@@ -1,0 +1,128 @@
+#include<bits/stdc++.h>
+using namespace std;
+const int N=1e5+9;
+int a[N];
+const int B=21;
+struct node{
+    long long sum;
+    vector<int>arr;
+    node() {
+        sum = 0;
+        arr.assign(B, 0);
+    }
+};
+node t[4*N];
+long long lazy[4*N];
+void build(int n,int b,int e){
+    lazy[n]=0;
+    if(b==e){
+        t[n].sum=a[b];
+        int temp=a[b];
+        int it=0;
+        while(temp>0){
+            t[n].arr[it]=temp%2;
+            temp/=2;
+            it++;
+        }
+        return;
+    }
+    int mid=(b+e)/2;
+    int left=2*n;
+    int right=left+1;
+    build(left,b,mid);
+    build(right,mid+1,e);
+    t[n].sum=t[left].sum+t[right].sum;
+    for(int i=0;i<=20;i++){
+        t[n].arr[i]=t[left].arr[i]+t[right].arr[i];
+    }
+}
+void push(int n,int b,int e){
+    if(lazy[n]==0) return;
+    int temp_v=lazy[n];
+    int it=0;
+    while(temp_v>0){
+        int temp=temp_v%2;
+        temp_v/=2;
+
+        if(temp==1){
+            int ans=pow(2,it);
+            t[n].sum-=(1LL*t[n].arr[it]*ans);
+            t[n].sum+=(1LL*(e-b+1-t[n].arr[it])*ans);
+        }
+        it++;
+    }
+    temp_v=lazy[n];
+    it=0;
+    while(temp_v>0){
+        int temp=temp_v%2;
+        temp_v/=2;
+
+        if(temp==1){
+            t[n].arr[it]=(e-b+1-t[n].arr[it]);
+        }
+        it++;
+    }
+    if(b!=e){
+        int lc=2*n,rc=lc+1;
+        lazy[lc]^=lazy[n];
+        lazy[rc]^=lazy[n];
+    }
+    lazy[n]=0;
+}
+void update(int n,int b,int e,int l,int r,int val){
+    push(n,b,e);
+    if(b>r||e<l) return;
+    if(b>=l&&e<=r){
+        lazy[n]=val;
+        push(n,b,e);
+        return;
+    }
+    int mid=(b+e)/2;
+    int left=2*n;
+    int right=left+1;
+    update(left,b,mid,l,r,val);
+    update(right,mid+1,e,l,r,val);
+    t[n].sum=t[left].sum+t[right].sum;
+    for(int i=0;i<=20;i++){
+        t[n].arr[i]=t[left].arr[i]+t[right].arr[i];
+    }
+}
+long long query(int n,int b,int e,int l,int r){
+    push(n,b,e);
+    if(b>r||e<l) return 0;
+    if(b>=l&&e<=r){
+        return t[n].sum;
+    }
+    int mid=(b+e)/2;
+    int left=2*n;
+    int right=left+1;
+    return (query(left,b,mid,l,r)+query(right,mid+1,e,l,r));
+}
+int main(){
+    int tt;
+    //cin>>tt;
+    int cs=0;
+    tt=1;
+    while(tt--){
+        int n;
+        cin>>n;
+        for(int i=1;i<=n;i++) cin>>a[i];
+        build(1,1,n);
+        int q;
+        cin>>q;
+        for(int i=0;i<q;i++){
+            int x;
+            cin>>x;
+            if(x==1){
+                int l,r;
+                cin>>l>>r;
+                cout<<query(1,1,n,l,r)<<endl;
+            }
+            else{
+                int l,r,val;
+                cin>>l>>r>>val;
+                update(1,1,n,l,r,val);
+            }
+        }
+    }
+}
