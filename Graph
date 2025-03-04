@@ -1,0 +1,32 @@
+#include<bits/stdc++.h>
+using namespace std;
+using ll=long long int;
+int main(){
+    int n;
+    cin>>n;
+    int matrix[n+1][n+1];
+    for(int i=0;i<=n;i++){
+        for(int j=0;j<=n;j++) matrix[i][j]=0;
+    }
+    for(int i=0;i<n;i++){
+        int u;
+        cin>>u;
+        int tot;
+        cin>>tot;
+        for(int j=0;j<tot;j++){
+            int x;
+            cin>>x;
+            matrix[u][x]=1;
+        }
+    }
+    for(int i=1;i<=n;i++){
+        for(int j=1;j<=n;j++) {
+            if(j==n) {
+                cout<<matrix[i][j]<<endl;
+            }
+            else{
+                cout<<matrix[i][j]<<" ";
+            }
+        }
+    }
+}
