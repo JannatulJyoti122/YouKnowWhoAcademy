@@ -1,0 +1,52 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+using ll = long long int;
+pair<int, int> val[101]; // Stores (discover time, finish time)
+vector<int> grid[101];
+vector<int> visited(101, 0);
+int ct = 0; // Global counter
+
+void dfs(int node) {
+    visited[node] = 1;
+    ct++;
+    val[node].first = ct; // Discovery time
+
+    for (int neighbor : grid[node]) {
+        if (!visited[neighbor]) {
+            dfs(neighbor);
+        }
+    }
+
+    ct++;
+    val[node].second = ct; // Finish time
+}
+
+int main() {
+    int n;
+    cin >> n;
+    
+    for (int i = 0; i < n; i++) {
+        int u, k;
+        cin >> u >> k;
+        grid[u].resize(k);
+        
+        for (int j = 0; j < k; j++) {
+            cin >> grid[u][j];
+        }
+
+        sort(grid[u].begin(), grid[u].end()); // Sort only once in main
+    }
+
+    for (int i = 1; i <= n; i++) {
+        if (!visited[i]) {
+            dfs(i);
+        }
+    }
+
+    for (int i = 1; i <= n; i++) {
+        cout << i << " " << val[i].first << " " << val[i].second << endl;
+    }
+
+    return 0;
+}
