@@ -1,0 +1,43 @@
+#include<bits/stdc++.h>
+using namespace std;
+int main(){
+    int n;
+    int cs=0;
+    while(1){
+        cin>>n;
+        if(n==0) break;
+        map<int,vector<int>>g;
+        map<int,int>dis;
+        for(int i=0;i<n;i++){
+            int u,v;
+            cin>>u>>v;
+            g[u].push_back(v);
+            g[v].push_back(u);
+            dis[u]=1e5;
+            dis[v]=1e5;
+        }
+        int start,msg;
+        while(1){
+            cin>>start>>msg;
+            if(start==0&&msg==0) break;
+            map<int,int>d=dis;
+            d[start]=0;
+            queue<int>q;
+            q.push(start);
+            set<int>st;
+            while(!q.empty()){
+                int u=q.front();
+                q.pop();
+                for(auto v:g[u]){
+                    if(d[u]+1<d[v]){
+                        d[v]=d[u]+1;
+                        q.push(v);
+                        if(d[v]<=msg) st.insert(v);
+                    }
+                }
+            }
+           // cout<<g.size()<<" ";
+            cout<<"Case "<<++cs<<": "<<g.size()-st.size()-1<<" nodes not reachable from node "<<start<<" with TTL = "<<msg<<".\n";
+        }
+    }
+}
