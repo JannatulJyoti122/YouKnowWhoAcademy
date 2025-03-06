@@ -1,0 +1,61 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+int main() {
+    int tt;
+    cin >> tt;
+    int cs = 0;
+
+    while (tt--) {
+        int node, edge;
+        cin >> node >> edge;
+        vector<int> g[node];
+
+        for (int i = 0; i < edge; i++) {
+            int u, v;
+            cin >> u >> v;
+            g[u].push_back(v);
+            g[v].push_back(u);
+        }
+
+        int start, endd;
+        cin >> start >> endd;
+        vector<int> d1(node, 1e9), d2(node, 1e9);
+
+        queue<int> q;
+        q.push(start);
+        d1[start] = 0;
+
+        while (!q.empty()) {
+            int u = q.front();
+            q.pop();
+            for (auto v : g[u]) {
+                if (d1[u] + 1 < d1[v]) {
+                    d1[v] = d1[u] + 1;
+                    q.push(v);
+                }
+            }
+        }
+
+        q.push(endd);
+        d2[endd] = 0;
+
+        while (!q.empty()) {
+            int u = q.front();
+            q.pop();
+            for (auto v : g[u]) {
+                if (d2[u] + 1 < d2[v]) {
+                    d2[v] = d2[u] + 1;
+                    q.push(v);
+                }
+            }
+        }
+
+        int mx = 0;
+        for (int i = 0; i < node; i++) {
+            mx = max(mx, d1[i] + d2[i]);
+        }
+
+        cout << "Case " << ++cs << ": " << mx << endl;
+    }
+}
