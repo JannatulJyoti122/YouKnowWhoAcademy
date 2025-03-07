@@ -1,0 +1,66 @@
+#include<bits/stdc++.h>
+using namespace std;
+
+const int N = 1005;
+bool vis[N];
+vector<int> g[N];
+int cnt[N], person[N];
+void dfs(int u) {
+  vis[u] = true;
+  cnt[u]++;
+  for (auto v: g[u]) {
+    if (!vis[v]) {
+      dfs(v);
+    }
+  }
+}
+// O(k * (n + m) * t)
+int32_t main() {
+  ios_base::sync_with_stdio(0);
+  cin.tie(0);
+  int t, cs = 0; cin >> t;
+  while (t--) {
+    int k, n, m; cin >> k >> n >> m;
+    for (int i = 1; i <= k; i++) {
+      cin >> person[i];
+    }
+    while (m--) {
+      int u, v; cin >> u >> v;
+      g[u].push_back(v);
+    }
+    for (int i = 1; i <= k; i++) {
+      for (int u = 1; u <= n; u++) {
+        vis[u] = false;
+      }
+      // dfs(person[i]);
+      queue<int> q;
+      q.push(person[i]);
+      vis[person[i]] = true;
+      while (!q.empty()) {
+        int u = q.front();
+        cnt[u]++;
+        q.pop();
+        for (auto v: g[u]) {
+          if (!vis[v]) {
+            vis[v] = true;
+            q.push(v);
+          }
+        }
+      }
+    }
+    int ans = 0;
+    for (int u = 1; u <= n; u++) {
+      if (cnt[u] == k) {
+        ++ans;
+      }
+    }
+    cout << "Case " << ++cs << ": " << ans << '\n';
+
+    for (int i = 1; i <= n; i++) {
+      g[i].clear();
+      cnt[i] = 0;
+      vis[i] = false;
+    }
+  }
+  return 0;
+}
