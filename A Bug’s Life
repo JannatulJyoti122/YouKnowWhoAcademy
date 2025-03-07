@@ -1,0 +1,57 @@
+#include<bits/stdc++.h>
+using namespace std;
+
+const int N = 2005;
+vector<int> g[N];
+int col[N];
+#define BLUE 1
+#define RED 2
+#define NOT_COLORED 0
+bool is_bilocorable;
+void dfs(int u, int c) {
+  col[u] = c;
+  for (auto v: g[u]) {
+    if (col[v] == NOT_COLORED) {
+      dfs(v, (c == BLUE ? RED : BLUE));
+    }
+    else {
+      if (col[u] == col[v]) {
+        is_bilocorable = false;
+      }
+    }
+  }
+}
+int32_t main() {
+  ios_base::sync_with_stdio(0);
+  cin.tie(0);
+  int t, cs = 0; cin >> t;
+  while (t--) {
+    int n, m; cin >> n >> m;
+    for (int i = 1; i <= m; i++) {
+      int u, v; cin >> u >> v;
+      g[u].push_back(v);
+      g[v].push_back(u);
+    }
+    for (int i = 1; i <= n; i++) {
+      col[i] = NOT_COLORED;
+    }
+    is_bilocorable = true;
+    for (int u = 1; u <= n; u++) {
+      if (col[u] == NOT_COLORED) {
+        dfs(u, 1);
+      }
+    }
+    cout << "Scenario #" << ++cs << ":\n";
+    if (is_bilocorable) {
+      cout << "No suspicious bugs found!\n";
+    }
+    else {
+      cout << "Suspicious bugs found!\n";
+    }
+
+    for (int i = 1; i <= n; i++) {
+      g[i].clear();
+    }
+  }
+  return 0;
+}
