@@ -1,0 +1,68 @@
+#include<bits/stdc++.h>
+using namespace std;
+const int N =1e5+9;
+int indeg[N];
+int main(){
+    int tt;
+    cin>>tt;
+    int cs=0;
+    while(tt--){
+        int n;
+        cin>>n;
+        vector<pair<int,int>>g[n];
+        for(int i=0;i<n-1;i++){
+            int u,v,w;
+            cin>>u>>v>>w;
+            g[u].push_back({v,w});
+            g[v].push_back({u,w});
+        }
+        queue<int>q;
+        q.push(0);
+        vector<int>d(n,0);
+        vector<int>vis(n,0);
+        while(!q.empty()){
+            int u=q.front();
+            q.pop();
+            vis[u]=1;
+            for(auto v:g[u]){
+                if(vis[v.first]==1) continue;
+                int wt=v.second;
+                d[v.first]=d[u]+wt;
+                q.push(v.first);
+            }
+        }
+        int mx=0;
+        int node=0;
+        for(int i=0;i<n;i++){
+            if(d[i]>mx){
+                node=i;
+                mx=d[i];
+            }
+        }
+        q.push(node);
+        vis.clear();
+        d.clear();
+        for(int i=0;i<n;i++){
+            vis[i]=0;
+            d[i]=0;
+        }
+        while(!q.empty()){
+            int u=q.front();
+            q.pop();
+            vis[u]=1;
+            for(auto v:g[u]){
+                if(vis[v.first]==1) continue;
+                int wt=v.second;
+                d[v.first]=d[u]+wt;
+                q.push(v.first);
+            }
+        }
+        mx=0;
+        for(int i=0;i<n;i++){
+            mx=max(mx,d[i]);
+           // cout<<d[i]<<" ";
+        }
+        cout<<"Case "<<++cs<<": "<<mx<<endl;
+    }
+
+}
