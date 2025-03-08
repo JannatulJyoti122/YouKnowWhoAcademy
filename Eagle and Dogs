@@ -1,0 +1,50 @@
+#include<bits/stdc++.h>
+using namespace std;
+const int N =1e5+9;
+vector<pair<int,int>>g[N];
+int n;
+int largest_dist(int node,vector<long long>&d){
+    d.resize(n+1);
+    d[node]=0;
+    queue<int>q;
+    q.push(node);
+    vector<bool>vis(n+1,false);
+    vis[node]=true;
+    while(!q.empty()){
+        int u=q.front();
+        q.pop();
+        for(auto [v,w]:g[u]){
+            if(!vis[v]){
+                d[v]=1LL*(d[u]+w);
+                q.push(v);
+                vis[v]=true;
+            }
+        }
+    }
+    int far=max_element(d.begin()+1,d.end())-d.begin();
+    return far;
+}
+int main(){
+    int tt;
+    cin>>tt;
+    while(tt--){
+        cin>>n;
+        for(int i=0;i<n-1;i++){
+            int u,v,w;
+            cin>>u>>v>>w;
+            g[u].push_back({v,w});
+            g[v].push_back({u,w});
+        }
+        vector<long long>ds,de;
+        int s=largest_dist(1,ds);
+        int e=largest_dist(s,ds);
+        largest_dist(e,de);
+        for(int i=1;i<=n;i++){
+            cout<<max(de[i],ds[i])<<" ";
+        }
+        cout<<endl;
+        for(int i=1;i<=n;i++){
+            g[i].clear();
+        }
+    }
+}
